@@ -2,7 +2,7 @@ import { SearchQuery, Article } from "./article.api";
 
 export async function SearchQueryFunction(query: string): Promise<SearchQuery> {
     const request = await fetch(
-        `https://en.wikipedia.org/w/rest.php/v1/search/title?q=${query}&limit=5`
+        `https://en.wikipedia.org/w/rest.php/v1/search/title?q=${query}&limit=10`
     );
 
     const response = await request.json() as { pages?: Article[] };
@@ -15,14 +15,21 @@ export async function SearchQueryFunction(query: string): Promise<SearchQuery> {
             title: page.title,
             description: page.description ?? page.excerpt ?? "",
             thumbnail: page.thumbnail ?? null,
+            redirect_url: `https://en.wikipedia.org/api/rest_v1/page/summary/${page.key}?redirect=true`
         })),
     };
 }
 
-export async function SpecificArticleSearch(articleId: string): Promise<Article> {
+export async function SpecificArticleSearchSummarized(articleKey: string): Promise<Article> {
     const request = await fetch(
-        `https://en.wikipedia.org/w/rest.php/v1/page/${articleId}?redirect=true`
+        `https://en.wikipedia.org/api/rest_v1/page/summary/${articleKey}?redirect=true`
     );
     const response = await request.json() as Article;
-    return response;
+    return {
+        id: response.id,
+        key: response.key,
+        title: response.title,
+        thumbnail: response.thumbnail,
+        extract: response.extract
+    };
 }

@@ -1,6 +1,8 @@
 # Ytterbium
 Basic typescript application using Hono that searches for articles using wikipedia's api.
 
+#### [Hono](https://htmx.org/docs/#indicators)
+
 ## Usage
 To search for an article do `http://localhost:3000/query/{a}` where `{a}` represents the key word. To go to a specific article do `http://localhost:3000/article/{a}` where `{a}` represents the key word/title of the article you want to see.
 

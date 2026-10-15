@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { SearchQueryFunction, SpecificArticleSearch } from '../api/query.api';
+import { SearchQueryFunction, SpecificArticleSearchSummarized } from '../api/query.api';
 import { serveStatic } from '@hono/bun';
 
 export const Index = new Hono()
@@ -17,7 +17,7 @@ export const SearchArticle = new Hono()
 export const ArticleById = new Hono()
     .get('/:key', async (c) => {
         const key = c.req.param('key');
-        const result = await SpecificArticleSearch(key);
+        const result = await SpecificArticleSearchSummarized(key);
         return c.json(result)
     })
 

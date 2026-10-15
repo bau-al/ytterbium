@@ -16,4 +16,6 @@ export interface Article {
     description?: string | null,
     excerpt?: string | null,
     thumbnail?: Thumbnail | null,
+    extract?: string | null,
+    redirect_url?: string | null,
 }
