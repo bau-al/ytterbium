@@ -8,8 +8,9 @@ export const Index = new Hono()
 
 export const SearchArticle = new Hono()
     .get('/:query', async (c) => {
+        const host = c.req.header('Host');
         const query = c.req.param('query');
-        const searchResults = await SearchQueryFunction(query);
+        const searchResults = await SearchQueryFunction(query, `${host}`);
         return c.json(searchResults)
     })
 
