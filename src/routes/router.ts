@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { SearchQueryFunction, SpecificArticleSearchSummarized } from '../api/query.api';
-import { serveStatic } from '@hono/bun';
 
 export const Index = new Hono()
     .get('/', async (c) => {
