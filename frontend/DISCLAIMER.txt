@@ -1,0 +1,3 @@
+Disclaimer:
+AI MADE
+The frontend was made with ai. I haven't checked it thoroughly so i don't know how well it works or breaks. The context.md file provides the model the necessary context for it to continue working.

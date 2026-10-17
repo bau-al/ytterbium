@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ytterbium</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <main x-data="app()">
+        <h1 class="title">Ytterbium</h1>
+
+        <form class="search" @submit.prevent="search()">
+            <input
+                type="text"
+                x-model="query"
+                placeholder="Search an article..."
+                autocomplete="off"
+                autofocus
+            />
+            <button type="submit" :disabled="loading">
+                <span x-show="!loading">Go</span>
+                <span x-show="loading" x-cloak>...</span>
+            </button>
+        </form>
+
+        <p class="error" x-show="error" x-text="error" x-cloak></p>
+
+        <p class="empty" x-show="!loading && !error && results.length === 0 && searched" x-cloak>
+            No results found.
+        </p>
+
+        <ul class="results" x-show="results.length > 0" x-cloak>
+            <template x-for="article in results" :key="article.id">
+                <li>
+                    <a class="result" :href="`article/article.html?key=${encodeURIComponent(article.key)}`">
+                        <img
+                            class="result-thumb"
+                            x-show="article.thumbnail"
+                            :src="thumb(article.thumbnail)"
+                            :alt="article.title"
+                        />
+                        <div class="result-body">
+                            <span class="result-title" x-text="article.title"></span>
+                            <span class="result-desc" x-text="article.description"></span>
+                        </div>
+                    </a>
+                </li>
+            </template>
+        </ul>
+    </main>
+
+    <script>
+        const API = 'http://localhost:3000';
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('app', () => ({
+                query: '',
+                results: [],
+                loading: false,
+                error: '',
+                searched: false,
+
+                // Search thumbnails are protocol-relative ("//thumb.wikimedia.org/...").
+                thumb(thumbnail) {
+                    if (!thumbnail) return '';
+                    return thumbnail.url.startsWith('//') ? `https:${thumbnail.url}` : thumbnail.url;
+                },
+
+                async search() {
+                    const query = this.query.trim();
+                    if (!query) return;
+
+                    this.loading = true;
+                    this.error = '';
+                    this.searched = true;
+
+                    try {
+                        const response = await fetch(`${API}/query/${encodeURIComponent(query)}`);
+                        if (!response.ok) throw new Error(`Request failed (${response.status})`);
+                        const data = await response.json();
+                        this.results = data.pages ?? [];
+                    } catch (e) {
+                        console.error('Failed to search:', e);
+                        this.results = [];
+                        this.error = 'Could not reach the API. Is the server running?';
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+            }));
+        });
+    </script>
+</body>
+</html>

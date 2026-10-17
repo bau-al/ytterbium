@@ -1,0 +1,140 @@
+:root {
+    color-scheme: dark;
+    --bg: #0e1116;
+    --surface: #161b22;
+    --border: #2a313c;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #4c8dff;
+    --error: #f85149;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+body {
+    margin: 0;
+    padding: 2.5rem 1.25rem;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+}
+
+main {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.title {
+    margin: 0 0 1.5rem;
+    font-size: 2rem;
+    text-align: center;
+    letter-spacing: -0.02em;
+}
+
+/* Search bar */
+.search {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.search input {
+    flex: 1;
+    padding: 0.7rem 0.9rem;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+}
+
+.search input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(76, 141, 255, 0.25);
+}
+
+.search button {
+    padding: 0.7rem 1.2rem;
+    font-size: 1rem;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.search button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* Results */
+.results {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.result {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.75rem 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.15s;
+}
+
+.result:hover {
+    border-color: var(--accent);
+}
+
+.result-thumb {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: var(--bg);
+}
+
+.result-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.result-title {
+    font-weight: 600;
+}
+
+.result-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+.empty,
+.status {
+    color: var(--muted);
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.error {
+    color: var(--error);
+}

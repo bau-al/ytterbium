@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ytterbium</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="article.css">
+</head>
+<body>
+    <main x-data="article()">
+        <a class="back" href="../index.html">&#8592; Back</a>
+
+        <template x-if="loading">
+            <p class="status">Loading...</p>
+        </template>
+
+        <template x-if="error">
+            <p class="status error" x-text="error"></p>
+        </template>
+
+        <article x-show="!loading && !error" x-cloak>
+            <h1 class="article-title" x-text="title"></h1>
+            <img
+                class="article-thumb"
+                x-show="thumbnail"
+                :src="thumbnail"
+                :alt="title"
+            />
+            <p class="article-extract" x-text="extract"></p>
+        </article>
+    </main>
+
+    <script>
+        const API = 'http://localhost:3000';
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('article', () => ({
+                title: '',
+                thumbnail: '',
+                extract: '',
+                loading: true,
+                error: '',
+
+                async init() {
+                    const key = new URLSearchParams(location.search).get('key');
+                    if (!key) {
+                        this.loading = false;
+                        this.error = 'No article was specified.';
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`${API}/article/${encodeURIComponent(key)}`);
+                        if (!response.ok) throw new Error(`Request failed (${response.status})`);
+                        const data = await response.json();
+                        this.title = data.title;
+                        this.thumbnail = data.thumbnail?.source ?? '';
+                        this.extract = data.extract ?? 'No description available.';
+                    } catch (e) {
+                        console.error('Failed to fetch article:', e);
+                        this.error = 'Could not load this article. Is the server running?';
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+            }));
+        });
+    </script>
+</body>
+</html>
